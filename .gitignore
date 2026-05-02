@@ -1,0 +1,30 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment variables
+.env
+
+# Runtime data
+tasks.json
+
+# Test & coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local IDE/tool settings
+.claude/settings.local.json
+
+# Conversation log
+sessions/log.md
+
+# Source instruction documents
+instructions/*.docx
