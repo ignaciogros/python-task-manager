@@ -25,9 +25,6 @@ Activa el entorno virtual:
 
 | Terminal | Comando |
 |---|---|
-| PowerShell | `venv\Scripts\Activate.ps1` |
-| PowerShell (primera vez, si está bloqueado) | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
-| CMD | `venv\Scripts\activate.bat` |
 | Git Bash / WSL | `source venv/Scripts/activate` |
 | macOS / Linux | `source venv/bin/activate` |
 
