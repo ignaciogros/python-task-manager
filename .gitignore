@@ -22,6 +22,7 @@ htmlcov/
 
 # Local IDE/tool settings
 .claude/settings.local.json
+.~lock.*
 
 # Conversation log
 sessions/log.md

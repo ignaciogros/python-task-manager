@@ -56,21 +56,35 @@ cp .env.example .env
 
 ### Entregable 1 — REST API
 
-Start the server:
+**Step 2 — Project structure** ✅
 
 ```bash
 uvicorn src.entregable1.main:app --reload
 ```
 
-Open `http://127.0.0.1:8000/docs` to confirm Swagger UI loads.
+Open `http://127.0.0.1:8000/docs` — Swagger UI must load.
 
-Run tests and coverage:
+**Step 3 — Data model** ✅
+
+```bash
+pytest tests/test_task.py -v
+```
+
+All 8 tests must pass, including the round-trip `from_dict(task.to_dict()) == task`.
+
+**Step 4 — Persistence (`TaskManager`)**
+
+```bash
+pytest tests/test_task_manager.py -v
+```
+
+**Step 5 — API endpoints**
 
 ```bash
 pytest tests/ -v --cov=src/entregable1 --cov-report=term-missing
 ```
 
-Quick endpoint check:
+Coverage must be ≥ 80 %. Quick endpoint check:
 
 ```bash
 curl -X POST http://127.0.0.1:8000/tasks \
