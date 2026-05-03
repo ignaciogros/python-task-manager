@@ -31,6 +31,9 @@ Develop a production-ready backend application that manages tasks assigned to us
 
 ## Getting Started
 
+> **All commands below assume a Bash-compatible shell.**
+> On Windows, use **Git Bash** (not CMD or PowerShell) to avoid compatibility issues.
+
 ```bash
 python -m venv venv
 ```
@@ -72,13 +75,13 @@ pytest tests/test_task.py -v
 
 All 8 tests must pass, including the round-trip `from_dict(task.to_dict()) == task`.
 
-**Step 4 — Persistence (`TaskManager`)**
+**Step 4 — Persistence (`TaskManager`)** ✅
 
 ```bash
 pytest tests/test_task_manager.py -v
 ```
 
-**Step 5 — API endpoints**
+**Step 5 — API endpoints** ✅
 
 ```bash
 pytest tests/ -v --cov=src/entregable1 --cov-report=term-missing

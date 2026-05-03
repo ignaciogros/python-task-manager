@@ -6,9 +6,8 @@
 - [x] Step 2: Project Structure Setup ✓
 - [x] Step 3: Data Model (`Task`) ✓
 - [x] Step 4: Persistence (`TaskManager`) ✓
-- [ ] **Step 5: API Endpoints** ← CURRENT
-- [ ] Step 5: API Endpoints
-- [ ] Step 6: Review & Validation
+- [x] Step 5: API Endpoints ✓
+- [ ] **Step 6: Review & Validation** ← CURRENT
 - [ ] Step 7: Packaging
 
 ---
