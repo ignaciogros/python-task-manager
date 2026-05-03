@@ -5,7 +5,8 @@
 - [x] Step 1: Framework Decision — **FastAPI** ✓
 - [x] Step 2: Project Structure Setup ✓
 - [x] Step 3: Data Model (`Task`) ✓
-- [ ] **Step 4: Persistence (`TaskManager`)** ← CURRENT
+- [x] Step 4: Persistence (`TaskManager`) ✓
+- [ ] **Step 5: API Endpoints** ← CURRENT
 - [ ] Step 5: API Endpoints
 - [ ] Step 6: Review & Validation
 - [ ] Step 7: Packaging
