@@ -1,6 +1,6 @@
 # API de Gestión de Tareas
 
-> 🇬🇧 [English version](README.md)
+> [English version](README.md)
 
 API REST para gestionar tareas asignadas a usuarios. Desarrollada con FastAPI y persistencia en fichero JSON.
 

@@ -1,6 +1,6 @@
 # Task Management API
 
-> 🇪🇸 [Versión en español](README_es.md)
+> [Versión en español](README_es.md)
 
 REST API for managing tasks assigned to users. Built with FastAPI and JSON file persistence.
 
