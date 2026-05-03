@@ -29,3 +29,6 @@ sessions/log.md
 
 # Source instruction documents
 instructions/*.docx
+
+# Delivery packages
+*.zip
