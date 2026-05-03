@@ -87,14 +87,56 @@ pytest tests/test_task_manager.py -v
 pytest tests/ -v --cov=src/entregable1 --cov-report=term-missing
 ```
 
-Coverage must be ≥ 80 %. Quick endpoint check:
+Coverage must be ≥ 80 %.
+
+---
+
+### Manual CRUD testing
+
+Start the server first:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/tasks \
+uvicorn src.entregable1.main:app --reload
+```
+
+#### Via Swagger UI (`http://127.0.0.1:8000/docs`)
+
+1. Expand the endpoint you want to call and click **Try it out**.
+2. Fill in the request body or parameters and click **Execute**.
+3. The response (status code + JSON body) appears below.
+
+Suggested sequence:
+- `POST /tasks/` — create a task.
+- `GET /tasks/` — confirm it appears in the list.
+- `GET /tasks/{task_id}` — copy the `id` from the previous response and retrieve the task.
+- `PUT /tasks/{task_id}` — update one or more fields (e.g. change `status` to `"completada"`).
+- `DELETE /tasks/{task_id}` — delete it.
+- `GET /tasks/{task_id}` — confirm it returns 404.
+
+#### Via curl (Bash)
+
+```bash
+# Create a task — save the returned id for the commands below
+curl -s -X POST http://127.0.0.1:8000/tasks/ \
   -H "Content-Type: application/json" \
   -d '{"title":"My task","description":"Details","priority":"media","effort_hours":2.5,"status":"pendiente","assigned_to":"Ana"}'
 
-curl http://127.0.0.1:8000/tasks
+# List all tasks
+curl -s http://127.0.0.1:8000/tasks/
+
+# Get a specific task  (replace <id> with the actual id)
+curl -s http://127.0.0.1:8000/tasks/<id>
+
+# Update a task
+curl -s -X PUT http://127.0.0.1:8000/tasks/<id> \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Updated task","description":"New details","priority":"alta","effort_hours":4.0,"status":"completada","assigned_to":"Ana"}'
+
+# Delete a task
+curl -s -X DELETE http://127.0.0.1:8000/tasks/<id>
+
+# Confirm deletion returns 404
+curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/tasks/<id>
 ```
 
 ### Entregable 2 — AI Endpoints
