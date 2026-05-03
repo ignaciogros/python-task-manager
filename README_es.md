@@ -13,6 +13,7 @@ API REST para gestionar tareas asignadas a usuarios. Desarrollada con FastAPI y 
 
 ## Instalación
 
+> **Todos los comandos deben ejecutarse desde la raíz del proyecto** (la carpeta que contiene `requirements.txt`).
 > **Todos los comandos asumen una terminal compatible con Bash.**
 > En Windows, usa **Git Bash** (no CMD ni PowerShell).
 

@@ -13,6 +13,7 @@ REST API for managing tasks assigned to users. Built with FastAPI and JSON file 
 
 ## Installation
 
+> **All commands must be run from the project root directory** (the folder that contains `requirements.txt`).
 > **All commands assume a Bash-compatible shell.**
 > On Windows, use **Git Bash** (not CMD or PowerShell).
 
