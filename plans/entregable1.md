@@ -3,9 +3,8 @@
 ## Overall status
 - [x] Step 0: Planning
 - [x] Step 1: Framework Decision — **FastAPI** ✓
-- [ ] **Step 2: Project Structure Setup** ← CURRENT
-
-- [ ] Step 3: Data Model (`Task`)
+- [x] Step 2: Project Structure Setup ✓
+- [ ] **Step 3: Data Model (`Task`)** ← CURRENT
 - [ ] Step 4: Persistence (`TaskManager`)
 - [ ] Step 5: API Endpoints
 - [ ] Step 6: Review & Validation

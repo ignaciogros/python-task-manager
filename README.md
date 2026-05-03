@@ -29,6 +29,73 @@ Develop a production-ready backend application that manages tasks assigned to us
 └── tests/          # Test suites
 ```
 
+## Getting Started
+
+```bash
+python -m venv venv
+```
+
+Activate the virtual environment:
+
+| Terminal | Command |
+|---|---|
+| PowerShell | `venv\Scripts\Activate.ps1` |
+| PowerShell (first time, if blocked) | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
+| CMD | `venv\Scripts\activate.bat` |
+| Git Bash / WSL | `source venv/Scripts/activate` |
+| macOS / Linux | `source venv/bin/activate` |
+
+If activation succeeded, your prompt will show `(venv)` at the start of the line. If it does not appear, the environment is not active and commands will use the system Python.
+
+```bash
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+## Validation by Phase
+
+### Entregable 1 — REST API
+
+Start the server:
+
+```bash
+uvicorn src.entregable1.main:app --reload
+```
+
+Open `http://127.0.0.1:8000/docs` to confirm Swagger UI loads.
+
+Run tests and coverage:
+
+```bash
+pytest tests/ -v --cov=src/entregable1 --cov-report=term-missing
+```
+
+Quick endpoint check:
+
+```bash
+curl -X POST http://127.0.0.1:8000/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title":"My task","description":"Details","priority":"media","effort_hours":2.5,"status":"pendiente","assigned_to":"Ana"}'
+
+curl http://127.0.0.1:8000/tasks
+```
+
+### Entregable 2 — AI Endpoints
+
+*To be completed.*
+
+### Entregable 3 — UI + Database
+
+*To be completed.*
+
+### Entregable 4 — Docker
+
+*To be completed.*
+
+### Entregable 5 — Cloud Deployment
+
+*To be completed.*
+
 ## Stack
 
 - **Framework:** FastAPI
