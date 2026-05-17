@@ -1,5 +1,8 @@
 """FastAPI application entry point."""
+from dotenv import load_dotenv
 from fastapi import FastAPI
+
+load_dotenv()
 
 from src.entregable.ai_router import router as ai_router
 from src.entregable.router import router
