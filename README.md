@@ -241,6 +241,7 @@ Files included in the delivery package (`m2_proyecto_ignacio_gros.zip`):
 | `requirements.txt` | Dependencies |
 | `.env.dist` | Environment variables template |
 | `pytest.ini` | pytest configuration |
+| `conftest.py` | pytest root configuration (mock for optional dependencies) |
 | `README.md` | English documentation |
 | `README_es.md` | Spanish documentation |
 

@@ -241,6 +241,7 @@ Ficheros incluidos en el paquete de entrega (`m2_proyecto_ignacio_gros.zip`):
 | `requirements.txt` | Dependencias |
 | `.env.dist` | Plantilla de variables de entorno |
 | `pytest.ini` | Configuración de pytest |
+| `conftest.py` | Configuración raíz de pytest (mock para dependencias opcionales) |
 | `README.md` | Documentación en inglés |
 | `README_es.md` | Documentación en español |
 
