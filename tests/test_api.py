@@ -2,7 +2,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from src.entregable1.main import app
+from src.entregable.main import app
 
 client = TestClient(app)
 

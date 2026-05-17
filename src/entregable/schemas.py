@@ -1,7 +1,7 @@
 """Request body schemas for the tasks API."""
 from pydantic import BaseModel
 
-from src.entregable1.models import Priority, Status
+from src.entregable.models import Priority, Status
 
 
 class TaskCreate(BaseModel):

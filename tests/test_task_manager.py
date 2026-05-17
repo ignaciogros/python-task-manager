@@ -3,8 +3,8 @@ import json
 
 import pytest
 
-from src.entregable1.models import Priority, Status, Task
-from src.entregable1.task_manager import TaskManager
+from src.entregable.models import Priority, Status, Task
+from src.entregable.task_manager import TaskManager
 
 
 # Redirects TASKS_FILE to a temp path so tests never touch the real tasks.json

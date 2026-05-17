@@ -2,7 +2,7 @@
 import pytest
 from pydantic import ValidationError
 
-from src.entregable1.models import Priority, Status, Task
+from src.entregable.models import Priority, Status, Task
 
 
 # Shared valid payload; each test receives a fresh copy via the fixture

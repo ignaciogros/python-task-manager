@@ -1,9 +1,9 @@
 """Task CRUD router."""
 from fastapi import APIRouter, HTTPException, status
 
-from src.entregable1.models import Task
-from src.entregable1.schemas import TaskCreate
-from src.entregable1.task_manager import TaskManager
+from src.entregable.models import Task
+from src.entregable.schemas import TaskCreate
+from src.entregable.task_manager import TaskManager
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 

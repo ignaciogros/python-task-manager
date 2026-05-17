@@ -4,7 +4,7 @@ import logging
 import os
 from pathlib import Path
 
-from src.entregable1.models import Task
+from src.entregable.models import Task
 
 logger = logging.getLogger(__name__)
 
