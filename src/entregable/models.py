@@ -1,5 +1,6 @@
 """Task domain model."""
 from enum import Enum
+from typing import Optional
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
@@ -31,6 +32,9 @@ class Task(BaseModel):
     effort_hours: float
     status: Status
     assigned_to: str
+    category: Optional[str] = None
+    risk_analysis: Optional[str] = None
+    risk_mitigation: Optional[str] = None
 
     def to_dict(self) -> dict:
         """Serialize the task to a plain dictionary."""
