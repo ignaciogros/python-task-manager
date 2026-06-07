@@ -56,10 +56,24 @@ python -c "from src.entregable.models import UserStory, Task, Priority, Status; 
 python -c "from src.entregable.schemas import UserStorySchema, UserStorySchemas, TaskSchema, TaskSchemas, UserStoryCreate, TaskCreate; print('OK')"
 ```
 
-### Fase 4 — Servicio AI [ ]
-- [ ] services/ai_service.py: generate_user_story(prompt) -> UserStory
-- [ ] services/ai_service.py: generate_tasks(user_story) -> list[Task]
-- [ ] Reutilizar providers/ existente; pedir JSON estructurado al LLM
+### Fase 4 — Servicio AI [x]
+- [x] services/ai_service.py: generate_user_story(prompt) -> UserStoryCreate
+- [x] services/ai_service.py: generate_tasks(user_story) -> list[TaskCreate]
+- [x] Reutiliza providers/ existente; pide JSON puro al LLM y valida con Pydantic
+
+#### Pruebas Fase 4
+```powershell
+# Con entorno activo, desde raíz del proyecto:
+# 1. Verificar importación
+python -c "from src.entregable.services.ai_service import generate_user_story, generate_tasks; print('OK')"
+
+# 2. Prueba real (requiere .env con proveedor LLM válido) — guardar como test_ai_service.py y ejecutar:
+#    from dotenv import load_dotenv; load_dotenv()
+#    from src.entregable.services.ai_service import generate_user_story
+#    us = generate_user_story("Sistema de reservas de salas de reuniones")
+#    print(us.model_dump())
+python test_ai_service.py
+```
 
 ### Fase 5 — Flask app y rutas [ ]
 - [ ] __init__.py: create_app() con SQLAlchemy
