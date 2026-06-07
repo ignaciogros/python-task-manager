@@ -121,10 +121,33 @@ flask --app src.entregable.main run --debug
 #### Pruebas Fase 7
 ```powershell
 # Con entorno activo, desde raíz del proyecto:
-pytest --cov=src/entregable --cov-report=term-missing
+pytest
+# Los parámetros de los tests están en pytest.ini
 ```
 
-### Fase 8 — Limpieza y README [ ]
+### Fase 8 — UI/UX (frontend-design) [x]
+- [x] static/css/custom.css: tokens de diseño, navbar, tablas, badges, spinner, empty state
+- [x] static/js/custom.js: loading state en formularios AI (spinner + disabled)
+- [x] base.html: navbar clara, flash accesible, custom.css/js incluidos
+- [x] user-stories.html: formulario con prompt-area, tabla con badges propios, conteo dinámico
+- [x] tasks.html: story header con narrativa, tabla de tareas, descripción truncada con title
+
+#### Pruebas Fase 8
+```powershell
+# Con MySQL corriendo y .env configurado:
+flask --app src.entregable.main run --debug
+
+# Verificar en navegador:
+# http://127.0.0.1:5000/user-stories
+# - Fondo cálido, navbar blanca con borde, tipografía serif en título
+# - Formulario con textarea grande y botón oscuro
+# - Botón "Generar historia" muestra spinner mientras genera
+# - Tabla con badges de color por prioridad
+# - Botón "Generar tareas" muestra spinner mientras genera
+# - http://127.0.0.1:5000/user-stories/{id}/tasks → cabecera historia + tabla tareas
+```
+
+### Fase 9 — Limpieza y README [ ]
 - [ ] Eliminar: task_manager.py, router.py, ai_router.py
 - [ ] Actualizar README.md
 

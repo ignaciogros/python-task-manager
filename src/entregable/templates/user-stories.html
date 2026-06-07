@@ -3,59 +3,92 @@
 {% block title %}Historias de usuario — Task Manager{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
+<div class="row align-items-end mb-4 mt-1">
     <div class="col">
-        <h1 class="h3">Historias de usuario</h1>
+        <h1 class="page-title">Historias de usuario</h1>
+        <p class="page-sub">Genera y gestiona historias de usuario con asistencia de IA.</p>
     </div>
 </div>
 
-<div class="card mb-5">
-    <div class="card-header">Generar nueva historia de usuario con IA</div>
+{# ── Generate form ── #}
+<div class="card mb-4">
+    <div class="card-header">Nueva historia</div>
     <div class="card-body">
-        <form method="post" action="{{ url_for('user_stories.create_user_story') }}">
+        <form method="post" action="{{ url_for('user_stories.create_user_story') }}"
+              id="prompt-form" novalidate>
             <div class="mb-3">
-                <label for="prompt" class="form-label">Describe la funcionalidad que necesitas</label>
-                <textarea class="form-control" id="prompt" name="prompt" rows="3"
-                    placeholder="Ej: Sistema de reservas de salas de reuniones para empresas medianas" required></textarea>
+                <label for="prompt" class="form-label">
+                    Describe la funcionalidad que necesitas
+                </label>
+                <textarea
+                    class="prompt-area"
+                    id="prompt"
+                    name="prompt"
+                    rows="3"
+                    placeholder="Ej: Sistema de reservas de salas de reuniones para equipos distribuidos"
+                    aria-describedby="prompt-help"
+                    required
+                ></textarea>
+                <div id="prompt-help" class="td-muted-sm mt-1">
+                    Cuanto más detallado sea el prompt, mejor será el resultado.
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Generar historia</button>
         </form>
     </div>
 </div>
 
+<hr class="section-divider">
+
+{# ── Stories list ── #}
+<span class="section-label">
+    {% if stories %}{{ stories | length }} historia{% if stories | length != 1 %}s{% endif %}{% else %}Sin historias{% endif %}
+</span>
+
 {% if stories %}
-<div class="table-responsive">
-    <table class="table table-hover align-middle">
-        <thead class="table-dark">
+<div class="table-wrapper">
+    <table class="table" aria-label="Listado de historias de usuario">
+        <thead>
             <tr>
-                <th>Proyecto</th>
-                <th>Rol</th>
-                <th>Objetivo</th>
-                <th>Prioridad</th>
-                <th>Puntos</th>
-                <th>Horas</th>
-                <th>Creada</th>
-                <th></th>
+                <th scope="col">Proyecto</th>
+                <th scope="col">Historia</th>
+                <th scope="col">Prioridad</th>
+                <th scope="col">Pts / h</th>
+                <th scope="col">Creada</th>
+                <th scope="col"><span class="visually-hidden">Acciones</span></th>
             </tr>
         </thead>
         <tbody>
             {% for story in stories %}
             <tr>
-                <td>{{ story.project }}</td>
-                <td>{{ story.role }}</td>
-                <td>{{ story.goal }}</td>
+                <td class="td-strong">{{ story.project }}</td>
                 <td>
-                    {% set badge = {'baja': 'success', 'media': 'warning', 'alta': 'danger', 'bloqueante': 'dark'} %}
-                    <span class="badge bg-{{ badge[story.priority.value] }}">{{ story.priority.value }}</span>
+                    <span class="td-muted-sm">
+                        Como <strong>{{ story.role }}</strong>,
+                        quiero {{ story.goal | truncate(60, true, '…') }}
+                    </span>
                 </td>
-                <td>{{ story.story_points }}</td>
-                <td>{{ story.effort_hours }}h</td>
-                <td>{{ story.created_at.strftime('%d/%m/%Y') }}</td>
                 <td>
-                    <form method="post"
-                          action="{{ url_for('user_stories.generate_story_tasks', story_id=story.id) }}">
-                        <button type="submit" class="btn btn-sm btn-outline-primary">Generar tareas</button>
-                    </form>
+                    <span class="badge bp-{{ story.priority.name }}">{{ story.priority.value }}</span>
+                </td>
+                <td class="td-pts">{{ story.story_points }}&thinsp;pt · {{ story.effort_hours }}&thinsp;h</td>
+                <td class="td-muted-sm">{{ story.created_at.strftime('%d %b %Y') }}</td>
+                <td>
+                    <div class="d-flex gap-2 align-items-center">
+                        <a href="{{ url_for('user_stories.list_tasks', story_id=story.id) }}"
+                           class="btn-generate"
+                           aria-label="Ver tareas de la historia {{ story.project }}">
+                            Ver tareas{% if story.tasks %} ({{ story.tasks | length }}){% endif %}
+                        </a>
+                        <form method="post"
+                              action="{{ url_for('user_stories.generate_story_tasks', story_id=story.id) }}"
+                              class="form-generate-tasks">
+                            <button type="submit" class="btn-generate-ghost"
+                                    aria-label="Generar tareas para la historia {{ story.project }}">
+                                + Generar
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             {% endfor %}
@@ -63,6 +96,11 @@
     </table>
 </div>
 {% else %}
-<p class="text-muted">No hay historias de usuario todavía. Usa el formulario para generar la primera.</p>
+<div class="table-wrapper">
+    <div class="empty-state">
+        <p>No hay historias de usuario todavía.<br>
+        <span class="td-muted-sm">Usa el formulario para generar la primera.</span></p>
+    </div>
+</div>
 {% endif %}
 {% endblock %}
