@@ -1,63 +1,91 @@
-# Task Management API
+# Task Manager
 
 > [Versión en español](README_es.md)
 
-REST API for managing tasks assigned to users. Built with FastAPI, JSON file persistence, and LLM-powered AI endpoints.
+Web application for generating and managing user stories and tasks with AI assistance. Built with Flask, MySQL, SQLAlchemy, and Jinja2.
 
-## Features
+## Requirements
 
-- Full CRUD for tasks: create, list, retrieve, update, delete.
-- Automatic request validation via Pydantic.
-- Interactive API docs at `/docs` (Swagger UI).
-- Configurable persistence path via environment variable.
-- AI endpoints for description generation, categorisation, effort estimation, and risk auditing.
-- Pluggable LLM provider: Azure OpenAI, Ollama (local), or any OpenAI-compatible endpoint.
+- Python 3.13
+- MySQL 8+ (local or remote)
+- An LLM provider: Azure OpenAI, Ollama, or any OpenAI-compatible endpoint
 
 ## Installation
 
-> **All commands must be run from the project root directory** (the folder that contains `requirements.txt`).
-> **All commands assume a Bash-compatible shell.**
-> On Windows, use **Git Bash** (not CMD or PowerShell).
+### 1. Create and activate a virtual environment
+
+**With uv (recommended):**
 
 ```bash
-python -m venv venv
+uv venv
 ```
 
-Activate the virtual environment:
+| OS | Activate |
+|----|----------|
+| macOS / Linux | `source .venv/bin/activate` |
+| Windows (PowerShell) | `.venv\Scripts\Activate.ps1` |
+| Windows (CMD) | `.venv\Scripts\activate.bat` |
 
-| Terminal | Command |
-|---|---|
-| Git Bash / WSL | `source venv/Scripts/activate` |
-| macOS / Linux | `source venv/bin/activate` |
+**With pip:**
 
-If activation succeeded, your prompt will show `(venv)`. If it does not appear, the environment is not active and commands will use the system Python.
+| OS | Create | Activate |
+|----|--------|----------|
+| macOS / Linux | `python3 -m venv .venv` | `source .venv/bin/activate` |
+| Windows (PowerShell) | `python -m venv .venv` | `.venv\Scripts\Activate.ps1` |
+| Windows (CMD) | `python -m venv .venv` | `.venv\Scripts\activate.bat` |
+
+### 2. Install dependencies
 
 ```bash
+# uv
+uv sync --group dev
+
+# pip
 pip install -r requirements.txt
-cp .env.dist .env
 ```
 
-Edit `.env` and fill in the LLM provider credentials (see [LLM configuration](#llm-configuration)).
+### 3. Configure environment
+
+```bash
+# macOS / Linux
+cp .env.dist .env
+
+# Windows (PowerShell)
+Copy-Item .env.dist .env
+```
+
+Edit `.env` and fill in:
+- `DATABASE_URL` — MySQL connection string
+- `SECRET_KEY` — any random string
+- LLM provider credentials (see [LLM configuration](#llm-configuration))
+
+### 4. Create the database
+
+Create an empty database named `taskmanager` (or the name used in `DATABASE_URL`) in your MySQL server. The application creates the tables automatically on first run.
+
+```sql
+CREATE DATABASE taskmanager CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
 ## Running
 
 ```bash
-uvicorn src.entregable.main:app --reload
+flask --app src.entregable.main run --debug
 ```
 
-The API is available at `http://127.0.0.1:8000`.
+Open `http://127.0.0.1:5000/user-stories` in your browser.
 
 ## Testing
 
-Run the test suite with coverage:
-
 ```bash
-pytest tests/ -v --cov=src/entregable --cov-report=term-missing
+pytest
 ```
+
+Coverage report is shown automatically (configured in `pytest.ini`).
 
 ## LLM configuration
 
-Set `PROVIDER` in `.env` to select the backend. Only the variables for the chosen provider are required.
+Set `PROVIDER` in `.env`. Only the variables for the chosen provider are required.
 
 ### Azure OpenAI
 
@@ -77,7 +105,7 @@ OLLAMA_MODEL=llama3.2
 OLLAMA_BASE_URL=http://localhost:11434/v1
 ```
 
-### OpenAI-compatible endpoint (Qwen, Mistral-Small, …)
+### OpenAI-compatible endpoint
 
 ```env
 PROVIDER=openai_compat
@@ -88,168 +116,32 @@ COMPAT_MODEL=<model-name>
 
 ## Usage
 
-### Swagger UI
+| URL | Action |
+|-----|--------|
+| `GET /user-stories` | List all user stories. Enter a prompt to generate a new one. |
+| `GET /user-stories/<id>/tasks` | View tasks for a user story. |
 
-Open `http://127.0.0.1:8000/docs` in your browser.
-
-1. Expand an endpoint and click **Try it out**.
-2. Fill in the request body or parameters and click **Execute**.
-3. The response (status code + JSON body) appears below.
-
-### CRUD endpoints
-
-Suggested sequence to exercise the full CRUD:
-
-- `POST /tasks/` — create a task.
-- `GET /tasks/` — confirm it appears in the list.
-- `GET /tasks/{task_id}` — retrieve the task by id.
-- `PUT /tasks/{task_id}` — update fields (e.g. change `status` to `"completada"`).
-- `DELETE /tasks/{task_id}` — delete it.
-- `GET /tasks/{task_id}` — confirm it returns 404.
-
-### AI endpoints
-
-All AI endpoints accept a full `Task` JSON body and return the same task with the AI-generated field(s) filled in.
-
-| Method | Endpoint | Fills in |
-|---|---|---|
-| POST | `/ai/tasks/describe` | `description` |
-| POST | `/ai/tasks/categorize` | `category` |
-| POST | `/ai/tasks/estimate` | `effort_hours` |
-| POST | `/ai/tasks/audit` | `risk_analysis` + `risk_mitigation` |
-
-**Example — generate a description:**
-
-```bash
-curl -s -X POST http://127.0.0.1:8000/ai/tasks/describe \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Implement JWT authentication",
-    "description": "",
-    "priority": "alta",
-    "effort_hours": 0,
-    "status": "pendiente",
-    "assigned_to": "Ana"
-  }'
-```
-
-**Example — categorise a task:**
-
-```bash
-curl -s -X POST http://127.0.0.1:8000/ai/tasks/categorize \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Set up GitHub Actions pipeline",
-    "description": "Create a CI workflow that runs tests on every push.",
-    "priority": "media",
-    "effort_hours": 3,
-    "status": "pendiente",
-    "assigned_to": "Carlos"
-  }'
-```
-
-**Example — estimate effort:**
-
-```bash
-curl -s -X POST http://127.0.0.1:8000/ai/tasks/estimate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Design database schema",
-    "description": "Model all entities for the task management system.",
-    "priority": "alta",
-    "effort_hours": 0,
-    "status": "pendiente",
-    "assigned_to": "Marta",
-    "category": "Database"
-  }'
-```
-
-**Example — risk audit:**
-
-```bash
-curl -s -X POST http://127.0.0.1:8000/ai/tasks/audit \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Migrate production database",
-    "description": "Move all data from the legacy system to MySQL.",
-    "priority": "bloqueante",
-    "effort_hours": 8,
-    "status": "pendiente",
-    "assigned_to": "Luis",
-    "category": "Database"
-  }'
-```
-
-### curl — CRUD
-
-```bash
-# Create a task — note the returned id for the commands below
-curl -s -X POST http://127.0.0.1:8000/tasks/ \
-  -H "Content-Type: application/json" \
-  -d '{"title":"My task","description":"Details","priority":"media","effort_hours":2.5,"status":"pendiente","assigned_to":"Ana"}'
-
-# List all tasks
-curl -s http://127.0.0.1:8000/tasks/
-
-# Get a specific task (replace <id> with the actual id)
-curl -s http://127.0.0.1:8000/tasks/<id>
-
-# Update a task
-curl -s -X PUT http://127.0.0.1:8000/tasks/<id> \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Updated task","description":"New details","priority":"alta","effort_hours":4.0,"status":"completada","assigned_to":"Ana"}'
-
-# Delete a task
-curl -s -X DELETE http://127.0.0.1:8000/tasks/<id>
-
-# Confirm deletion returns 404
-curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/tasks/<id>
-```
-
-## Task fields
-
-| Field | Type | Values |
-|---|---|---|
-| `title` | string | any |
-| `description` | string | any (generated by `/ai/tasks/describe`) |
-| `priority` | string | `baja` · `media` · `alta` · `bloqueante` |
-| `effort_hours` | float | estimated hours (generated by `/ai/tasks/estimate`) |
-| `status` | string | `pendiente` · `en progreso` · `en revisión` · `completada` |
-| `assigned_to` | string | assignee name |
-| `category` | string · optional | generated by `/ai/tasks/categorize` |
-| `risk_analysis` | string · optional | generated by `/ai/tasks/audit` |
-| `risk_mitigation` | string · optional | generated by `/ai/tasks/audit` |
-
-## Roadmap
-
-| # | Deliverable | Summary |
-| :---: | :--- | :--- |
-| 1 | **REST API** ✅ | FastAPI + JSON persistence. CRUD endpoints for `Task`. |
-| 2 | **AI Endpoints** ✅ | LLM-powered endpoints: description generation, categorisation, effort estimation, risk audit. Pluggable provider (Azure OpenAI, Ollama, OpenAI-compatible). |
-| 3 | **UI + Database** | Jinja2 interface, MySQL via SQLAlchemy. |
-| 4 | **Docker + CI/CD** | Dockerfile, GitHub Actions pipeline, image pushed to Docker Hub. |
-| 5 | **Cloud Deployment** | Docker Compose, Azure Container Registry, Azure Container Apps, full CI/CD pipeline. |
-
-## Distribution
-
-Files included in the delivery package (`m2_proyecto_ignacio_gros.zip`):
-
-| Path | Description |
-|---|---|
-| `src/` | Application source code |
-| `tests/` | Test suite |
-| `requirements.txt` | Dependencies |
-| `.env.dist` | Environment variables template |
-| `pytest.ini` | pytest configuration |
-| `conftest.py` | pytest root configuration (mock for optional dependencies) |
-| `README.md` | English documentation |
-| `README_es.md` | Spanish documentation |
+From the user stories list:
+1. Write a prompt describing the feature you need and click **Generar historia**.
+2. Once the story appears, click **Ver tareas** to view existing tasks or **+ Generar** to generate new ones via AI.
 
 ## Stack
 
-- **Framework:** FastAPI
-- **Validation:** Pydantic
-- **Testing:** pytest
-- **LLM SDK:** openai (`pip install openai`)
-- **Database (phase 3+):** MySQL + SQLAlchemy
-- **Infra (phase 4+):** Docker, GitHub Actions, Azure
+| Layer | Technology |
+|-------|-----------|
+| Framework | Flask 3.1 |
+| Database | MySQL 8 + SQLAlchemy 3 + PyMySQL |
+| Validation | Pydantic 2 |
+| Templates | Jinja2 + Bootstrap 5.3 |
+| LLM SDK | openai |
+| Testing | pytest + pytest-cov |
+
+## Roadmap
+
+| # | Deliverable | Status |
+|:-:|-------------|--------|
+| 1 | REST API — FastAPI + JSON persistence | ✅ |
+| 2 | AI endpoints — description, categorisation, estimation, risk audit | ✅ |
+| 3 | UI + Database — Flask, MySQL, Jinja2 | ✅ |
+| 4 | Docker + CI/CD | — |
+| 5 | Cloud deployment (Azure) | — |

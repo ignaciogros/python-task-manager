@@ -147,9 +147,14 @@ flask --app src.entregable.main run --debug
 # - http://127.0.0.1:5000/user-stories/{id}/tasks → cabecera historia + tabla tareas
 ```
 
-### Fase 9 — Limpieza y README [ ]
-- [ ] Eliminar: task_manager.py, router.py, ai_router.py
-- [ ] Actualizar README.md
+### Fase 9 — Limpieza y README [x]
+- [x] Eliminados: task_manager.py, router.py, ai_router.py (adelantado en Fase 7)
+- [x] README.md y README_es.md actualizados: instrucciones multi-OS, uv y pip
+
+#### Pruebas Fase 9
+```powershell
+# Verificar que el README es correcto siguiendo sus propias instrucciones de instalación
+```
 
 ## Archivos eliminados
 - src/entregable/task_manager.py
