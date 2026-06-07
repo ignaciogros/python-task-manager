@@ -1,17 +1,8 @@
-"""FastAPI application entry point."""
+"""Flask application entry point."""
 from dotenv import load_dotenv
-from fastapi import FastAPI
 
 load_dotenv()
 
-from src.entregable.ai_router import router as ai_router
-from src.entregable.router import router
+from src.entregable import create_app
 
-app = FastAPI(
-    title="Task Manager API",
-    description="REST API for task management with JSON persistence and AI integrations.",
-    version="2.0.0",
-)
-
-app.include_router(router)
-app.include_router(ai_router)
+app = create_app()

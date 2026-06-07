@@ -75,14 +75,26 @@ python -c "from src.entregable.services.ai_service import generate_user_story, g
 python test_ai_service.py
 ```
 
-### Fase 5 — Flask app y rutas [ ]
-- [ ] __init__.py: create_app() con SQLAlchemy
-- [ ] routes/user_stories.py: Blueprint con 4 endpoints
+### Fase 5 — Flask app y rutas [x]
+- [x] __init__.py: create_app() con SQLAlchemy, blueprint registrado, db.create_all()
+- [x] routes/user_stories.py: Blueprint con 4 endpoints
   - GET  /user-stories
   - POST /user-stories
   - GET  /user-stories/<id>/tasks
   - POST /user-stories/<id>/generate-tasks
-- [ ] main.py: punto de entrada Flask
+- [x] main.py: punto de entrada Flask (load_dotenv + create_app)
+
+#### Pruebas Fase 5
+```powershell
+# Requiere MySQL corriendo y DATABASE_URL configurado en .env
+
+# 1. Arrancar la app
+flask --app src.entregable.main run --debug
+
+# 2. Verificar en navegador:
+#    http://127.0.0.1:5000/user-stories  → debe responder (aunque plantilla no existe aún)
+#    Los logs deben mostrar que las tablas se crean en MySQL
+```
 
 ### Fase 6 — Templates Jinja2 [ ]
 - [ ] templates/base.html: layout con Bootstrap
