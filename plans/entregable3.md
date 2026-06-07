@@ -112,10 +112,17 @@ flask --app src.entregable.main run --debug
 # Botón "Generar tareas" → genera tareas y redirige a /user-stories/{id}/tasks
 ```
 
-### Fase 7 — Tests [ ]
-- [ ] Eliminar tests FastAPI
-- [ ] Añadir tests con Flask test client
-- [ ] Mantener cobertura >= 80%
+### Fase 7 — Tests [x]
+- [x] Eliminados: test_api.py, test_task.py, test_task_manager.py, test_ai.py
+- [x] Conservado: test_providers.py (providers no cambiaron)
+- [x] Creados: conftest.py, test_models.py, test_schemas.py, test_ai_service.py, test_routes.py
+- [x] create_app() actualizado para aceptar test_config (SQLite in-memory)
+
+#### Pruebas Fase 7
+```powershell
+# Con entorno activo, desde raíz del proyecto:
+pytest --cov=src/entregable --cov-report=term-missing
+```
 
 ### Fase 8 — Limpieza y README [ ]
 - [ ] Eliminar: task_manager.py, router.py, ai_router.py

@@ -6,13 +6,16 @@ from flask import Flask
 from src.entregable.database import db
 
 
-def create_app() -> Flask:
+def create_app(test_config: dict | None = None) -> Flask:
     """Create and configure the Flask application."""
     app = Flask(__name__, template_folder="templates", static_folder="static")
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-in-prod")
+
+    if test_config:
+        app.config.update(test_config)
 
     db.init_app(app)
 
