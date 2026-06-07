@@ -1,0 +1,18 @@
+[project]
+name = "entregable"
+version = "3.0.0"
+requires-python = ">=3.13"
+dependencies = [
+    "flask==3.1.1",
+    "flask-sqlalchemy==3.1.1",
+    "pymysql==1.1.1",
+    "python-dotenv==1.0.1",
+    "pydantic==2.11.5",
+    "openai>=1.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==8.3.5",
+    "pytest-cov==7.1.0",
+]

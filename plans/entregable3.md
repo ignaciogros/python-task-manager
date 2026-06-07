@@ -15,8 +15,8 @@
 
 #### Pruebas Fase 1
 ```bash
-# 1. Instalar dependencias
-pip install -r requirements.txt
+# 1. Instalar dependencias (gestor: uv)
+uv sync --group dev
 
 # 2. Verificar Bootstrap descargado
 ls src/entregable/static/css/bootstrap.min.css
