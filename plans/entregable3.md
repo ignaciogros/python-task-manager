@@ -14,21 +14,21 @@
 - [x] Descargar Bootstrap (CSS + JS bundle) a src/entregable/static/
 
 #### Pruebas Fase 1
-```bash
+```powershell
 # 1. Crear y activar entorno virtual
-uv venv /ruta/a/tu/entorno
-source /ruta/a/tu/entorno/bin/activate  # Windows: \ruta\Scripts\activate
+uv venv C:\ruta\a\tu\entorno
+C:\ruta\a\tu\entorno\Scripts\activate
 
 # 2. Instalar dependencias
 uv sync --group dev
 # o: pip install -r requirements.txt
 
 # 3. Verificar Bootstrap
-ls src/entregable/static/css/bootstrap.min.css
-ls src/entregable/static/js/bootstrap.bundle.min.js
+Test-Path src\entregable\static\css\bootstrap.min.css
+Test-Path src\entregable\static\js\bootstrap.bundle.min.js
 
 # 4. Copiar y editar .env
-cp .env.dist .env
+Copy-Item .env.dist .env
 # Ajustar DATABASE_URL con tus credenciales MySQL
 ```
 
@@ -41,13 +41,20 @@ cp .env.dist .env
       Flujo: Request → Pydantic schema → SQLAlchemy model → Pydantic schema → Response
 
 #### Pruebas Fase 2
-```bash
-# Con el entorno virtual activo (ver Fase 1) y desde la raíz del proyecto:
+```powershell
+# Con entorno activo, desde raíz del proyecto:
 python -c "from src.entregable.models import UserStory, Task, Priority, Status; print('OK')"
 ```
 
-### Fase 3 — Schemas Pydantic [ ]
-- [ ] schemas.py: UserStorySchema, UserStorySchemas, TaskSchema, TaskSchemas
+### Fase 3 — Schemas Pydantic [x]
+- [x] schemas.py: UserStorySchema, UserStorySchemas, TaskSchema, TaskSchemas
+- [x] schemas.py: UserStoryCreate, TaskCreate (validan salida del LLM antes de persistir)
+
+#### Pruebas Fase 3
+```powershell
+# Con entorno activo, desde raíz del proyecto:
+python -c "from src.entregable.schemas import UserStorySchema, UserStorySchemas, TaskSchema, TaskSchemas, UserStoryCreate, TaskCreate; print('OK')"
+```
 
 ### Fase 4 — Servicio AI [ ]
 - [ ] services/ai_service.py: generate_user_story(prompt) -> UserStory
