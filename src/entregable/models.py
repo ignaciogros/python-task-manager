@@ -1,48 +1,61 @@
-"""Task domain model."""
-from enum import Enum
+"""SQLAlchemy domain models."""
+import enum
+from datetime import datetime
 from typing import Optional
-from uuid import uuid4
 
-from pydantic import BaseModel, Field
+from sqlalchemy import Enum as SAEnum, Float, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
+
+from src.entregable.database import db
 
 
-# str + Enum makes Pydantic serialize the value as a plain string (e.g. "alta"), not "Priority.alta"
-class Priority(str, Enum):
+class Priority(str, enum.Enum):
     baja = "baja"
     media = "media"
     alta = "alta"
     bloqueante = "bloqueante"
 
 
-class Status(str, Enum):
+class Status(str, enum.Enum):
     pendiente = "pendiente"
-    en_progreso = "en progreso"   # internal name uses underscore; JSON value preserves the space
-    en_revision = "en revisión"   # internal name is ASCII; JSON value keeps the accent
+    en_progreso = "en progreso"
+    en_revision = "en revisión"
     completada = "completada"
 
 
-class Task(BaseModel):
-    """Represents a task assigned to a user."""
+class UserStory(db.Model):
+    """User story linked to one or more tasks."""
 
-    # default_factory generates a new UUID per instance instead of sharing one across all instances
-    id: str = Field(default_factory=lambda: str(uuid4()))
-    title: str
-    description: str
-    priority: Priority
-    effort_hours: float
-    status: Status
-    assigned_to: str
-    category: Optional[str] = None
-    risk_analysis: Optional[str] = None
-    risk_mitigation: Optional[str] = None
+    __tablename__ = "user_stories"
 
-    def to_dict(self) -> dict:
-        """Serialize the task to a plain dictionary."""
-        # model_dump() resolves enums to their string values automatically
-        return self.model_dump()
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    project: Mapped[str] = mapped_column(String(255), nullable=False)
+    role: Mapped[str] = mapped_column(String(255), nullable=False)
+    goal: Mapped[str] = mapped_column(String(500), nullable=False)
+    reason: Mapped[str] = mapped_column(String(500), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    priority: Mapped[Priority] = mapped_column(SAEnum(Priority), nullable=False)
+    story_points: Mapped[int] = mapped_column(Integer, nullable=False)
+    effort_hours: Mapped[float] = mapped_column(Float, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
 
-    @classmethod
-    def from_dict(cls, data: dict) -> "Task":
-        """Deserialize a task from a plain dictionary."""
-        # cls(**data) lets Pydantic validate and coerce each field on construction
-        return cls(**data)
+    tasks: Mapped[list["Task"]] = relationship("Task", back_populates="user_story", cascade="all, delete-orphan")
+
+
+class Task(db.Model):
+    """Task associated with a user story."""
+
+    __tablename__ = "tasks"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    priority: Mapped[Priority] = mapped_column(SAEnum(Priority), nullable=False)
+    effort_hours: Mapped[float] = mapped_column(Float, nullable=False)
+    status: Mapped[Status] = mapped_column(SAEnum(Status), nullable=False)
+    assigned_to: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    user_story_id: Mapped[int] = mapped_column(ForeignKey("user_stories.id"), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
+
+    user_story: Mapped["UserStory"] = relationship("UserStory", back_populates="tasks")

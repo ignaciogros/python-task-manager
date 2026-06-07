@@ -15,22 +15,36 @@
 
 #### Pruebas Fase 1
 ```bash
-# 1. Instalar dependencias (gestor: uv)
-uv sync --group dev
+# 1. Crear y activar entorno virtual
+uv venv /ruta/a/tu/entorno
+source /ruta/a/tu/entorno/bin/activate  # Windows: \ruta\Scripts\activate
 
-# 2. Verificar Bootstrap descargado
+# 2. Instalar dependencias
+uv sync --group dev
+# o: pip install -r requirements.txt
+
+# 3. Verificar Bootstrap
 ls src/entregable/static/css/bootstrap.min.css
 ls src/entregable/static/js/bootstrap.bundle.min.js
 
-# 3. Copiar y editar .env
+# 4. Copiar y editar .env
 cp .env.dist .env
-# Editar .env: ajustar DATABASE_URL con tus credenciales MySQL
+# Ajustar DATABASE_URL con tus credenciales MySQL
 ```
 
-### Fase 2 — Modelos SQLAlchemy [ ]
-- [ ] models.py: UserStory (id, project, role, goal, reason, description, priority, story_points, effort_hours, created_at)
-- [ ] models.py: Task (id, title, description, priority, effort_hours, status, assigned_to, user_story_id FK, created_at)
-- [ ] Eliminar modelo Pydantic Task actual
+### Fase 2 — Modelos SQLAlchemy [x]
+- [x] database.py: instancia SQLAlchemy (db) con DeclarativeBase
+- [x] models.py: UserStory (id, project, role, goal, reason, description, priority, story_points, effort_hours, created_at)
+- [x] models.py: Task (id, title, description, priority, effort_hours, status, assigned_to, user_story_id FK, created_at)
+- [x] Eliminado modelo Pydantic Task que actuaba como dominio+persistencia (antipatrón)
+      Pydantic permanece como capa de validación/serialización (Fase 3)
+      Flujo: Request → Pydantic schema → SQLAlchemy model → Pydantic schema → Response
+
+#### Pruebas Fase 2
+```bash
+# Con el entorno virtual activo (ver Fase 1) y desde la raíz del proyecto:
+python -c "from src.entregable.models import UserStory, Task, Priority, Status; print('OK')"
+```
 
 ### Fase 3 — Schemas Pydantic [ ]
 - [ ] schemas.py: UserStorySchema, UserStorySchemas, TaskSchema, TaskSchemas
