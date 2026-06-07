@@ -96,10 +96,21 @@ flask --app src.entregable.main run --debug
 #    Los logs deben mostrar que las tablas se crean en MySQL
 ```
 
-### Fase 6 — Templates Jinja2 [ ]
-- [ ] templates/base.html: layout con Bootstrap
-- [ ] templates/user-stories.html: listado + textarea prompt + botón "Generar tareas"
-- [ ] templates/tasks.html: listado de tareas de una historia
+### Fase 6 — Templates Jinja2 [x]
+- [x] templates/base.html: navbar, flash messages, bloques title/content
+- [x] templates/user-stories.html: formulario prompt + tabla de historias + botón "Generar tareas"
+- [x] templates/tasks.html: cabecera con historia + tabla de tareas + enlace volver
+
+#### Pruebas Fase 6
+```powershell
+# Requiere MySQL corriendo y .env configurado
+flask --app src.entregable.main run --debug
+
+# Verificar en navegador:
+# http://127.0.0.1:5000/user-stories        → lista vacía + formulario
+# Enviar prompt → genera historia y redirige
+# Botón "Generar tareas" → genera tareas y redirige a /user-stories/{id}/tasks
+```
 
 ### Fase 7 — Tests [ ]
 - [ ] Eliminar tests FastAPI

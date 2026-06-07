@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Historias de usuario — Task Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1 class="h3">Historias de usuario</h1>
+    </div>
+</div>
+
+<div class="card mb-5">
+    <div class="card-header">Generar nueva historia de usuario con IA</div>
+    <div class="card-body">
+        <form method="post" action="{{ url_for('user_stories.create_user_story') }}">
+            <div class="mb-3">
+                <label for="prompt" class="form-label">Describe la funcionalidad que necesitas</label>
+                <textarea class="form-control" id="prompt" name="prompt" rows="3"
+                    placeholder="Ej: Sistema de reservas de salas de reuniones para empresas medianas" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Generar historia</button>
+        </form>
+    </div>
+</div>
+
+{% if stories %}
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Proyecto</th>
+                <th>Rol</th>
+                <th>Objetivo</th>
+                <th>Prioridad</th>
+                <th>Puntos</th>
+                <th>Horas</th>
+                <th>Creada</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for story in stories %}
+            <tr>
+                <td>{{ story.project }}</td>
+                <td>{{ story.role }}</td>
+                <td>{{ story.goal }}</td>
+                <td>
+                    {% set badge = {'baja': 'success', 'media': 'warning', 'alta': 'danger', 'bloqueante': 'dark'} %}
+                    <span class="badge bg-{{ badge[story.priority.value] }}">{{ story.priority.value }}</span>
+                </td>
+                <td>{{ story.story_points }}</td>
+                <td>{{ story.effort_hours }}h</td>
+                <td>{{ story.created_at.strftime('%d/%m/%Y') }}</td>
+                <td>
+                    <form method="post"
+                          action="{{ url_for('user_stories.generate_story_tasks', story_id=story.id) }}">
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Generar tareas</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted">No hay historias de usuario todavía. Usa el formulario para generar la primera.</p>
+{% endif %}
+{% endblock %}

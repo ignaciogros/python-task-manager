@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Tareas — {{ story.project }} — Task Manager{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{{ url_for('user_stories.list_user_stories') }}" class="btn btn-outline-secondary btn-sm mb-3">
+        &larr; Volver a historias
+    </a>
+    <h1 class="h3">{{ story.project }}</h1>
+    <p class="text-muted mb-1">
+        <strong>Como</strong> {{ story.role }},
+        <strong>quiero</strong> {{ story.goal }},
+        <strong>para</strong> {{ story.reason }}.
+    </p>
+    <p>{{ story.description }}</p>
+    <div class="d-flex gap-2 mb-2">
+        {% set badge = {'baja': 'success', 'media': 'warning', 'alta': 'danger', 'bloqueante': 'dark'} %}
+        <span class="badge bg-{{ badge[story.priority.value] }}">{{ story.priority.value }}</span>
+        <span class="badge bg-secondary">{{ story.story_points }} pts</span>
+        <span class="badge bg-secondary">{{ story.effort_hours }}h estimadas</span>
+    </div>
+</div>
+
+<h2 class="h5 mb-3">Tareas asociadas</h2>
+
+{% if tasks %}
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Prioridad</th>
+                <th>Estado</th>
+                <th>Horas</th>
+                <th>Asignada a</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>
+                    {% set badge = {'baja': 'success', 'media': 'warning', 'alta': 'danger', 'bloqueante': 'dark'} %}
+                    <span class="badge bg-{{ badge[task.priority.value] }}">{{ task.priority.value }}</span>
+                </td>
+                <td>
+                    {% set status_badge = {'pendiente': 'secondary', 'en progreso': 'primary', 'en revisión': 'warning', 'completada': 'success'} %}
+                    <span class="badge bg-{{ status_badge[task.status.value] }}">{{ task.status.value }}</span>
+                </td>
+                <td>{{ task.effort_hours }}h</td>
+                <td>{{ task.assigned_to or '—' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted">No hay tareas generadas para esta historia.</p>
+{% endif %}
+{% endblock %}
